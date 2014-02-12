@@ -25,7 +25,7 @@ public class Board {
 	}
 
 	//makes sure the characters in the string are valid "color" chars
-	private boolean hasValidChars(String code){
+	public boolean hasValidChars(String code){
 		for(int i=0; i<code.length(); i++){
 			if(!"BGOPRY".contains(code.charAt(i) + ""))
 				return false;
@@ -52,10 +52,25 @@ public class Board {
 		row++;
 	}
 	
-	public String toString(){
+	public String toString(Code c){
 		StringBuilder sb = new StringBuilder();
-		for(int boardIndex = 0; boardIndex < board.length; boardIndex++){
-			sb.append(board[boardIndex].toString() + "\n");
+		sb.append(".... Secret Code\n");
+		for(int boardIndex = 1; boardIndex < board.length; boardIndex++){
+			
+			//checks if row has a past user guess in it and adds the correct number of white and black pegs to the String
+			//if(){
+				sb.append(board[boardIndex].toString());
+				sb.append(" Result: ");
+				for(int numBlacks = 0; numBlacks < board[boardIndex].getBlackCount(); numBlacks++)
+					sb.append("Black ");
+				for(int numWhite = 0; numWhite < board[boardIndex].getWhiteCount(); numWhite++)
+					sb.append("White ");
+				if(c.getBlackCount() == 0 && board[boardIndex].getWhiteCount() == 0)
+					sb.append("No Pegs");
+				sb.append("\n");
+			//}
+			//else
+				sb.append(board[boardIndex].toString() + "\n");
 		}
 		return sb.toString();
 	}
