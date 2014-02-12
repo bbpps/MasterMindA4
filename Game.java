@@ -21,12 +21,18 @@ public class Game {
 		board = new Board(solution);
 
 	}
+	
 	//Runs through 1 game of MasterMind
 	public void runGames(){
-		MasterMindOutput.intro();
+		MasterMindOutput.intro(showCode, solution.convertCodetoString());
 		while(numGuessesLeft > 0 && !userWins){
 			runTurn();
 		}
+	}
+	
+	//Returns number of guesses player has left
+	public int getNumGuess(){
+		return numGuessesLeft;
 	}
 
 	//Randomly generates a code with random pegs
@@ -47,13 +53,27 @@ public class Game {
 	//generated code
 	private void runTurn(){
 		Code guess = new Code();
-		String userGuess = MasterMindOutput.getUserGuess();
+		String userGuess = getValidGuess();
 		guess.convertString(userGuess);
 		board.setTurn(userGuess);
 		board.scanRow();
-		MasterMindOutput.printTurnResults(showCode, solution.convertCodetoString());
-		if(guess.getBlackCount() == 4)
-			userWins = true;
+		numGuessesLeft--;
+		MasterMindOutput.printTurnResults(showCode, solution.convertCodetoString(), board, getNumGuess(), solution);
 		
+	}
+	
+	//Makes sure that the guess entered by the player is valid and if it isn't, 
+	//it asks the user to input another guess
+	private String getValidGuess(){
+		String guess = MasterMindOutput.getUserGuess();
+		while(guess.length()!= 4 && !board.hasValidChars(guess)){
+			if(guess.length() != 4)
+				System.out.println("Your guess does not have exactly 4 characters. Try again.\n");
+			else if(!board.hasValidChars(guess))
+				System.out.println("There are invalid characters in your guess. Try again.\n");
+				
+			guess = MasterMindOutput.getUserGuess();
+		}
+		return guess;
 	}
 }
