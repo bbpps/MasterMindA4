@@ -6,7 +6,7 @@ public class Peg {
 	public Peg(Colors color) {
 		this.color = color;
 	}
-	
+
 	//returns the color of the peg
 	public Colors getColor(){
 		return color;
@@ -23,12 +23,12 @@ public class Peg {
 		else
 			return true;
 	}
-	
+
 	//Mutator method to set the color of a peg
 	public void setColor(Colors c){
 		this.color = c;
 	}
-	
+
 	public String toString(){
 		if(color.equals(Colors.BLUE))
 			return "B";
@@ -44,7 +44,7 @@ public class Peg {
 			return "Y";
 		else
 			return ".";
-		
+
 	}
-	
+
 }
