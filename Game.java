@@ -28,7 +28,7 @@ public class Game {
 		while(numGuessesLeft > 0 && !userWins){
 			runTurn();
 		}
-		MasterMindOutput.printWinResults(board);
+		//MasterMindOutput.printWin();
 	}
 	
 	//Returns number of guesses player has left
@@ -57,15 +57,18 @@ public class Game {
 		String userGuess = getValidGuess();
 		guess.convertString(userGuess);
 		board.setTurn(userGuess);
+		userWins = board.checkForWin();
 		board.scanRow();
 		numGuessesLeft--;
-		userWins = MasterMindOutput.printTurnResults(showCode, solution.convertCodetoString(), board, getNumGuess(), solution);
+		MasterMindOutput.printTurnResults(showCode, solution.convertCodetoString(), board, getNumGuess(), solution);
+		
 	}
 	
 	//Makes sure that the guess entered by the player is valid and if it isn't, 
 	//it asks the user to input another guess
 	private String getValidGuess(){
 		String guess = MasterMindOutput.getUserGuess();
+		guess = guess.toUpperCase();
 		while(guess.length()!= 4 || !board.hasValidChars(guess)){
 			if(guess.length() != 4)
 				System.out.println("Your guess does not have exactly 4 characters. Try again.\n");
