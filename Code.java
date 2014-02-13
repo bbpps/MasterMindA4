@@ -76,13 +76,15 @@ public class Code {
 		return result;
 	}
 
-	// checks if the current peg is within elements
-	public boolean contains(Peg peg) {
+	// returns the first index of the peg
+	public int indexOf(Peg peg) {
+		if(peg == null)
+			return -1;
 		for (int i = 0; i < elements.length; i++) {
 			if (peg.equals(elements[i]))
-				return true;
+				return i;
 		}
-		return false;
+		return -1;
 	}
 
 	@Override
@@ -127,5 +129,14 @@ public class Code {
 				sb.append(elements[codeIndex].toString() + "");
 		}
 		return sb.toString();
+	}
+
+	//checks if elements is empty
+	public boolean isEmpty() {
+		for(int i=0; i<elements.length; i++){
+			if(elements[i] != null)
+				return false;
+		}
+		return true;
 	}
 }

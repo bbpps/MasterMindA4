@@ -1,5 +1,7 @@
 package masterMind;
 
+import java.util.Arrays;
+
 public class Board {
 	private Code[] board;
 	private int row;
@@ -18,7 +20,7 @@ public class Board {
 	//converts the chars (BGOPRY) to a Code object and then
 	//stores them into next available row
 	public void setTurn(String line){
-		if(line.length() != 4 && !hasValidChars(line))
+		if(line.length() != 4 || !hasValidChars(line))
 			throw new IllegalArgumentException("Pre conditions violated: " + line.length() + ", " + line);
 		Code c = board[row];
 		c.convertString(line);
@@ -36,20 +38,36 @@ public class Board {
 	//scans the current row and compares it to the real
 	//code. Then returns count of the black and white pegs
 	public void scanRow(){
-		for(int codeIndex=0; codeIndex<board[row].getSize(); codeIndex++){
-			Peg currentPeg = board[row].get(codeIndex);
-			if(currentPeg.equals(board[0].get(codeIndex))){
+		Code solution = deepCopy(board[0]);
+		Code guess = deepCopy(board[row]);
+		for(int codeIndex=0; codeIndex<guess.getSize(); codeIndex++){
+			Peg currentPeg = guess.get(codeIndex);
+			if(currentPeg.equals(solution.get(codeIndex))){
 				//increment counter for a black peg
 				board[row].incrementBlack();
+				solution.set(codeIndex, null); //set it to null so that it doesn't get counted twice
+				guess.set(codeIndex, null);
 			}
-			//we know the color pegs aren't the same at position "codeIndex"
+		}
+		for(int i=0; i<guess.getSize(); i++){
+			Peg currentPeg = guess.get(i);
 			//check if the color at codeIndex is in the solution
-			else if(board[0].contains(currentPeg)){
+			int index = solution.indexOf(currentPeg);
+			if(index >= 0){
 				//increment counter for a white peg
 				board[row].incrementWhite();
+				solution.set(index, null);
 			}
 		}
 		row++;
+	}
+	
+	private Code deepCopy(Code c){
+		Code copy = new Code();
+		for(int codeIndex = 0; codeIndex < c.getSize(); codeIndex++){
+			copy.set(codeIndex, c.get(codeIndex));
+		}
+		return copy;
 	}
 	
 	public String toString(Code c){
@@ -58,7 +76,7 @@ public class Board {
 		for(int boardIndex = 1; boardIndex < board.length; boardIndex++){
 			
 			//checks if row has a past user guess in it and adds the correct number of white and black pegs to the String
-			if(){
+			if(!c.isEmpty()){
 				sb.append(board[boardIndex].toString());
 				sb.append(" Result: ");
 				for(int numBlacks = 0; numBlacks < board[boardIndex].getBlackCount(); numBlacks++)
@@ -73,5 +91,11 @@ public class Board {
 				sb.append(board[boardIndex].toString() + "\n");
 		}
 		return sb.toString();
+	}
+
+	public boolean checkForWin() {
+		if(board[row].equals(board[0]))
+			return true;
+		return false;
 	}
 }
