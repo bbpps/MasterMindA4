@@ -1,7 +1,5 @@
 package masterMind;
 
-import java.util.Arrays;
-
 public class Board {
 	private Code[] board;
 	private int row;
@@ -24,6 +22,11 @@ public class Board {
 			throw new IllegalArgumentException("Pre conditions violated: " + line.length() + ", " + line);
 		Code c = board[row];
 		c.convertString(line);
+	}
+	
+	//Returns the most current guess by the user
+	public Code getCurrentGuess(){
+		return board[row-1];
 	}
 
 	//makes sure the characters in the string are valid "color" chars
@@ -76,14 +79,14 @@ public class Board {
 		for(int boardIndex = 1; boardIndex < board.length; boardIndex++){
 			
 			//checks if row has a past user guess in it and adds the correct number of white and black pegs to the String
-			if(!c.isEmpty()){
+			if(!board[boardIndex].isEmpty()){
 				sb.append(board[boardIndex].toString());
 				sb.append(" Result: ");
 				for(int numBlacks = 0; numBlacks < board[boardIndex].getBlackCount(); numBlacks++)
 					sb.append("Black ");
 				for(int numWhite = 0; numWhite < board[boardIndex].getWhiteCount(); numWhite++)
 					sb.append("White ");
-				if(c.getBlackCount() == 0 && board[boardIndex].getWhiteCount() == 0)
+				if(board[boardIndex].getBlackCount() == 0 && board[boardIndex].getWhiteCount() == 0 )
 					sb.append("No Pegs");
 				sb.append("\n");
 			}
@@ -92,9 +95,33 @@ public class Board {
 		}
 		return sb.toString();
 	}
+	
+	//Returns the part of the board that has guesses inputted to it
+	public String getAllGuessOnBoard(){
+		StringBuilder sb = new StringBuilder();
+		for(int boardIndex = 1; boardIndex < row; boardIndex++){
+			//checks if row has a past user guess in it and adds the correct number of white and black pegs to the String
+			if(!board[boardIndex].isEmpty()){
+				sb.append(board[boardIndex].toString());
+				sb.append(" Result: ");
+				for(int numBlacks = 0; numBlacks < board[boardIndex].getBlackCount(); numBlacks++)
+					sb.append("Black ");
+				for(int numWhite = 0; numWhite < board[boardIndex].getWhiteCount(); numWhite++)
+					sb.append("White ");
+				if(board[boardIndex].getBlackCount() == 0 && board[boardIndex].getWhiteCount() == 0 )
+					sb.append("No Pegs");
+				sb.append("\n");
+			}
+			else
+				sb.append(board[boardIndex].toString() + "\n");
+		}
+		
+		return sb.toString();
+	}
 
-	public boolean checkForWin() {
-		if(board[row].equals(board[0]))
+	//checks if the user has won a game or not
+	public boolean checkForWin() {                        
+		if(board[row-1].getBlackCount() == 4)
 			return true;
 		return false;
 	}
